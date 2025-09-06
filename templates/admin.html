@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Campus Events</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>👨‍💼 Admin Portal</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <a href="/admin">Admin Portal</a>
+                <a href="/student">Student Portal</a>
+                <a href="/reports">Reports</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="message"></div>
+
+        <!-- College Management Section -->
+        <div class="card">
+            <h2>🏫 College Management</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="college-name">College Name</label>
+                    <input type="text" id="college-name" placeholder="Enter college name">
+                </div>
+                <div class="form-group">
+                    <label for="college-code">College Code</label>
+                    <input type="text" id="college-code" placeholder="e.g., MIT, STAN" maxlength="10">
+                </div>
+            </div>
+            <button onclick="createCollege()" class="btn">Add College</button>
+
+            <h3>Existing Colleges</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="colleges-table">
+                        <tr>
+                            <td colspan="4" class="loading">Loading colleges...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Event Management Section -->
+        <div class="card">
+            <h2>🎯 Event Management</h2>
+            <div class="form-group">
+                <label for="event-college">Select College</label>
+                <select id="event-college">
+                    <option value="">Choose a college...</option>
+                </select>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="event-title">Event Title</label>
+                    <input type="text" id="event-title" placeholder="Enter event title">
+                </div>
+                <div class="form-group">
+                    <label for="event-type">Event Type</label>
+                    <select id="event-type">
+                        <option value="hackathon">Hackathon</option>
+                        <option value="workshop">Workshop</option>
+                        <option value="tech_talk">Tech Talk</option>
+                        <option value="fest">Fest</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="event-description">Description</label>
+                <textarea id="event-description" rows="3" placeholder="Enter event description"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="event-start">Start Date & Time</label>
+                    <input type="datetime-local" id="event-start">
+                </div>
+                <div class="form-group">
+                    <label for="event-end">End Date & Time</label>
+                    <input type="datetime-local" id="event-end">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="event-capacity">Maximum Capacity (optional)</label>
+                <input type="number" id="event-capacity" min="1" placeholder="Leave empty for unlimited">
+            </div>
+
+            <button onclick="createEvent()" class="btn">Create Event</button>
+
+            <h3>Recent Events</h3>
+            <div id="events-list">
+                <div class="loading">Loading events...</div>
+            </div>
+        </div>
+
+
+        <!-- Attendance Management Section -->
+        <div class="card">
+            <h2>✅ Attendance Management</h2>
+            <div class="form-group">
+                <label for="attendance-search">Search Registration</label>
+                <input type="text" id="attendance-search" placeholder="Enter student email or event name">
+            </div>
+            <button onclick="searchRegistrations()" class="btn">Search</button>
+
+            <div id="registrations-list">
+                <div class="message info">Search for registrations to mark attendance</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Submit Feedback</h3>
+            <div class="form-group">
+                <label>Rating (1-5 stars)</label>
+                <div class="stars" id="rating-stars">
+                    <span class="star" data-rating="1">★</span>
+                    <span class="star" data-rating="2">★</span>
+                    <span class="star" data-rating="3">★</span>
+                    <span class="star" data-rating="4">★</span>
+                    <span class="star" data-rating="5">★</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="feedback-comment">Comments (optional)</label>
+                <textarea id="feedback-comment" rows="3" placeholder="Share your feedback about the event"></textarea>
+            </div>
+            <button onclick="submitFeedback()" class="btn btn-success">Submit Feedback</button>
+        </div>
+    </div>
+
+    <!-- Edit Event Modal -->
+    <div id="edit-event-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Edit Event</h3>
+            <div class="form-group">
+                <label for="edit-event-title">Event Title</label>
+                <input type="text" id="edit-event-title" placeholder="Enter event title">
+            </div>
+            
+            <div class="form-group">
+                <label for="edit-event-type">Event Type</label>
+                <select id="edit-event-type">
+                    <option value="hackathon">Hackathon</option>
+                    <option value="workshop">Workshop</option>
+                    <option value="tech_talk">Tech Talk</option>
+                    <option value="fest">Fest</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="edit-event-description">Description</label>
+                <textarea id="edit-event-description" rows="3" placeholder="Enter event description"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="edit-event-start">Start Date & Time</label>
+                    <input type="datetime-local" id="edit-event-start">
+                </div>
+                <div class="form-group">
+                    <label for="edit-event-end">End Date & Time</label>
+                    <input type="datetime-local" id="edit-event-end">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="edit-event-capacity">Maximum Capacity (optional)</label>
+                <input type="number" id="edit-event-capacity" min="1" placeholder="Leave empty for unlimited">
+            </div>
+
+            <div class="form-group">
+                <label for="edit-event-location">Location (optional)</label>
+                <input type="text" id="edit-event-location" placeholder="Enter event location">
+            </div>
+
+            <div class="btn-group">
+                <button onclick="updateEvent()" class="btn btn-success">Update Event</button>
+                <button onclick="closeModal('edit-event-modal')" class="btn btn-danger">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    <script>
+        // Initialize admin portal
+        document.addEventListener('DOMContentLoaded', function() {
+            loadColleges();
+            loadEvents();
+            setupModal();
+        });
+    </script>
+</body>
+</html>

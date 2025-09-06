@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Campus Events</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>👨‍🎓 Student Portal</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <a href="/admin">Admin Portal</a>
+                <a href="/student">Student Portal</a>
+                <a href="/reports">Reports</a>
+                <a href="#" onclick="logout()" id="logout-btn" style="display: none; color: #e74c3c; font-weight: bold;">Logout</a>
+            
+                <a href="#" onclick="logout()" class="logout-btn">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="message"></div>
+
+        <!-- Student Login Section -->
+        <div class="card" id="login-section">
+            <h2>🔐 Student Login</h2>
+            <p>Enter your email to access your personalized event dashboard.</p>
+            <div class="form-group">
+                <label for="student-email-login">Student Email</label>
+                <input type="email" id="student-email-login" placeholder="Enter your email address">
+            </div>
+            <button onclick="loginStudent()" class="btn">Access My Events</button>
+        </div>
+
+        <!-- Student Dashboard (hidden initially) -->
+        <div id="student-dashboard" style="display: none;">
+            <div class="card">
+                <h2>Welcome, <span id="student-name-display">Student</span>! 👋</h2>
+                <p>Here are your upcoming events and registration options.</p>
+            </div>
+
+            <!-- Available Events Section -->
+            <div class="card">
+                <h3>🎯 Available Events</h3>
+                <p>Browse and register for upcoming events at your college and others.</p>
+                <div id="available-events">
+                    <div class="loading">Loading available events...</div>
+                </div>
+            </div>
+
+            <!-- My Registrations Section -->
+            <div class="card">
+                <h3>📝 My Registrations</h3>
+                <div id="my-registrations">
+                    <div class="loading">Loading your registrations...</div>
+                </div>
+            </div>
+
+            <!-- Feedback Section -->
+            <div class="card">
+                <h3>⭐ Pending Feedback</h3>
+                <p>Share your experience for events you've attended.</p>
+                <div id="pending-feedback">
+                    <div class="message info">No pending feedback at the moment.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Registration Modal -->
+    <div id="registration-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Register for Event</h3>
+            <div id="event-details">
+                <h4 id="modal-event-title">Event Title</h4>
+                <p id="modal-event-description">Event description</p>
+                <div class="event-meta">
+                    <p><strong>Type:</strong> <span id="modal-event-type">Type</span></p>
+                    <p><strong>Date:</strong> <span id="modal-event-date">Date</span></p>
+                    <p><strong>College:</strong> <span id="modal-event-college">College</span></p>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button onclick="confirmRegistration()" class="btn btn-success">Confirm Registration</button>
+                <button onclick="closeModal('registration-modal')" class="btn btn-danger">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Submit Feedback</h3>
+            <div id="feedback-event-details">
+                <h4 id="feedback-event-title">Event Title</h4>
+            </div>
+            <div class="form-group">
+                <label>Rating (1-5 stars)</label>
+                <div class="stars" id="rating-stars">
+                    <span class="star" data-rating="1">★</span>
+                    <span class="star" data-rating="2">★</span>
+                    <span class="star" data-rating="3">★</span>
+                    <span class="star" data-rating="4">★</span>
+                    <span class="star" data-rating="5">★</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="feedback-comment">Comments (optional)</label>
+                <textarea id="feedback-comment" rows="3" placeholder="Share your feedback about the event"></textarea>
+            </div>
+            <button onclick="submitFeedback()" class="btn btn-success">Submit Feedback</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/student.js') }}"></script>
+    <script>
+        // Initialize student portal
+        document.addEventListener('DOMContentLoaded', function() {
+            setupModals();
+            
+            // Check if student is already logged in (simple localStorage check)
+            const loggedInStudent = localStorage.getItem('currentStudent');
+            if (loggedInStudent) {
+                const student = JSON.parse(loggedInStudent);
+                showStudentDashboard(student);
+            }
+        });
+
+        function setupModals() {
+            // Setup modal close buttons
+            document.querySelectorAll('.close').forEach(closeBtn => {
+                closeBtn.onclick = function() {
+                    this.closest('.modal').style.display = 'none';
+                };
+            });
+
+            // Setup star rating
+            setupStarRating();
+        }
+    </script>
+</body>
+</html>

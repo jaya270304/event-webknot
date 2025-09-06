@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Event Management Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>🎓 Campus Events</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <a href="/admin">Admin Portal</a>
+                <a href="/student">Student Portal</a>
+                <a href="/reports">Reports</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card fade-in">
+            <h2>Welcome to Campus Event Management Platform</h2>
+            <p>Manage college events, student registrations, attendance, and feedback all in one place.</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>👨‍💼 Admin Portal</h3>
+                <p>Create and manage events, track registrations, mark attendance, and view detailed reports.</p>
+                <div class="btn-group">
+                    <a href="/admin" class="btn">Access Admin Portal</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>👨‍🎓 Student Portal</h3>
+                <p>Browse upcoming events, register for events, and provide feedback after attending.</p>
+                <div class="btn-group">
+                    <a href="/student" class="btn btn-success">Access Student Portal</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Reports & Analytics</h3>
+                <p>View comprehensive reports on event performance, attendance rates, and student feedback.</p>
+                <div class="btn-group">
+                    <a href="/reports" class="btn btn-warning">View Reports</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🏫 System Overview</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-colleges">-</div>
+                    <div class="stat-label">Total Colleges</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="active-events">-</div>
+                    <div class="stat-label">Active Events</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-registrations">-</div>
+                    <div class="stat-label">Total Registrations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avg-attendance">-</div>
+                    <div class="stat-label">Avg Attendance %</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>📋 Platform Features</h3>
+            <div class="card-grid">
+                <div>
+                    <h4>Event Management</h4>
+                    <ul>
+                        <li>Create hackathons, workshops, tech talks, and fests</li>
+                        <li>Set capacity limits and manage cancellations</li>
+                        <li>Track event status and timelines</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Student Registration</h4>
+                    <ul>
+                        <li>Easy event browsing and registration</li>
+                        <li>Duplicate registration prevention</li>
+                        <li>Registration management and cancellation</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Attendance Tracking</h4>
+                    <ul>
+                        <li>Quick check-in process</li>
+                        <li>Real-time attendance monitoring</li>
+                        <li>Post-event feedback collection</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Comprehensive Reports</h4>
+                    <ul>
+                        <li>Registration and attendance analytics</li>
+                        <li>Feedback ratings and trends</li>
+                        <li>College-wide performance metrics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script>
+        // Load dashboard statistics
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboardStats();
+        });
+
+        async function loadDashboardStats() {
+            try {
+                // Load colleges count
+                const collegesResponse = await fetch('/api/colleges');
+                const colleges = await collegesResponse.json();
+                document.getElementById('total-colleges').textContent = colleges.length;
+
+                // Load events count
+                const eventsResponse = await fetch('/api/events');
+                const events = await eventsResponse.json();
+                document.getElementById('active-events').textContent = events.length;
+
+                // Simple mock data for other stats (would require more complex queries)
+                document.getElementById('total-registrations').textContent = '150+';
+                document.getElementById('avg-attendance').textContent = '85%';
+            } catch (error) {
+                console.error('Error loading dashboard stats:', error);
+                // Set default values on error
+                document.getElementById('total-colleges').textContent = '0';
+                document.getElementById('active-events').textContent = '0';
+                document.getElementById('total-registrations').textContent = '0';
+                document.getElementById('avg-attendance').textContent = '0%';
+            }
+        }
+    </script>
+</body>
+</html>

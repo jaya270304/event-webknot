@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics - Campus Events</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>📊 Reports & Analytics</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <a href="/admin">Admin Portal</a>
+                <a href="/student">Student Portal</a>
+                <a href="/reports">Reports</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="message"></div>
+
+        <!-- Report Filters -->
+        <div class="card">
+            <h2>🔍 Report Filters</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="report-college">Select College</label>
+                    <select id="report-college">
+                        <option value="">All Colleges</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="report-event">Select Event (optional)</label>
+                    <select id="report-event">
+                        <option value="">All Events</option>
+                    </select>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button onclick="generateCollegeReport()" class="btn">Generate College Report</button>
+                <button onclick="generateEventReport()" class="btn btn-success">Generate Event Report</button>
+                <button onclick="loadSystemOverview()" class="btn btn-warning">System Overview</button>
+            </div>
+        </div>
+
+        <!-- System Overview Stats -->
+        <div class="card">
+            <h2>🏫 System Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="overview-colleges">-</div>
+                    <div class="stat-label">Total Colleges</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="overview-events">-</div>
+                    <div class="stat-label">Active Events</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="overview-registrations">-</div>
+                    <div class="stat-label">Total Registrations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="overview-attendance-rate">-</div>
+                    <div class="stat-label">Avg Attendance Rate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Reports Section -->
+        <div class="card">
+            <h2>📈 Event Performance Reports</h2>
+            <div id="events-report">
+                <div class="message info">Select filters above and click "Generate College Report" to view event performance data.</div>
+            </div>
+        </div>
+
+        <!-- Individual Event Details -->
+        <div class="card" id="event-details-section" style="display: none;">
+            <h2>🎯 Individual Event Analysis</h2>
+            <div id="event-stats">
+                <!-- Event statistics will be populated here -->
+            </div>
+        </div>
+
+        <!-- Top Performing Events -->
+        <div class="card">
+            <h2>🏆 Top Performing Events</h2>
+            <p>Events with highest attendance rates and feedback scores</p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Type</th>
+                            <th>College</th>
+                            <th>Registrations</th>
+                            <th>Attendance</th>
+                            <th>Attendance %</th>
+                            <th>Avg Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody id="top-events-table">
+                        <tr>
+                            <td colspan="7" class="loading">Loading top performing events...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- College Comparison -->
+        <div class="card">
+            <h2>🏫 College Comparison</h2>
+            <p>Compare event performance across different colleges</p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>College Name</th>
+                            <th>Total Events</th>
+                            <th>Total Registrations</th>
+                            <th>Total Attendance</th>
+                            <th>Avg Attendance %</th>
+                            <th>Avg Event Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody id="college-comparison-table">
+                        <tr>
+                            <td colspan="6" class="loading">Loading college comparison data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Event Type Analysis -->
+        <div class="card">
+            <h2>📊 Event Type Analysis</h2>
+            <div class="stats-grid" id="event-type-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="hackathon-count">-</div>
+                    <div class="stat-label">Hackathons</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="workshop-count">-</div>
+                    <div class="stat-label">Workshops</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="tech-talk-count">-</div>
+                    <div class="stat-label">Tech Talks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="fest-count">-</div>
+                    <div class="stat-label">Fests</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity Log -->
+        <div class="card">
+            <h2>📝 Recent Activity</h2>
+            <div id="recent-activity">
+                <div class="loading">Loading recent activity...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/reports.js') }}"></script>
+    <script>
+        // Initialize reports page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCollegesForReports();
+            loadSystemOverview();
+            loadTopEvents();
+            loadCollegeComparison();
+            loadEventTypeStats();
+        });
+    </script>
+</body>
+</html>
