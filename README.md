@@ -2,7 +2,8 @@
 
 ## Implementation Video
 
-<img src="Implementation%20Video.gif" alt="Implementation Video" />
+[![Watch the video](https://raw.githubusercontent.com/jaya270304/event-webknot/master/thumbnail.png)](https://raw.githubusercontent.com/jaya270304/event-webknot/master/Implementation%20Video.mp4)
+
 
 ## My Understanding of This Project
 
