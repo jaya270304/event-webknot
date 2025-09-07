@@ -2,7 +2,7 @@
 
 ## Implementation Video
 
-<img src="Implementation%20Video.gif" alt="Implementation Video" width="600" />
+<img src="Implementation%20Video.gif" alt="Implementation Video" />
 
 ## My Understanding of This Project
 
