@@ -2,7 +2,7 @@
 
 ## Implementation Video
 
-[![Implemetation Video](https://img.youtube.com/vi/Y31_XN0VEqI/0.jpg)](https://youtu.be/Y31_XN0VEqI)
+<img src="Implementation%20Video.gif" alt="Implementation Video" width="600" />
 
 ## My Understanding of This Project
 
