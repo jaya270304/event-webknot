@@ -1,5 +1,9 @@
 # Campus Event Management System
 
+## Implementation Video
+
+[![Implemetation Video](https://img.youtube.com/vi/Y31_XN0VEqI/0.jpg)](https://youtu.be/Y31_XN0VEqI)
+
 ## My Understanding of This Project
 
 I used Flask for the backend because it's simple ,just Python handling endpoinst and talking to a PostgreSQL database. The frontend is just HTML, CSS, and JavaScript to keep it simple. I made five database tables that link together properly : colleges, events, students, registrations, and attendance , so when you delete a college, everything related gets cleaned up automatically. The whole thing runs on one server, handles about 25,000 students across 50 colleges, and gives you real-time reports without any complicated setup.
